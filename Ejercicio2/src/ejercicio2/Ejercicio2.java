@@ -15,56 +15,37 @@ import java.util.Scanner;
  * @author adees
  */
 public class Ejercicio2 {
-
+    ArrayList<Long> palindromo = new ArrayList<Long>();
+    ArrayList<Integer> limite = new ArrayList<Integer>();
+    ArrayList<Long> resultados = new ArrayList<Long>();
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Ejercicio2 e = new Ejercicio2();
-        ArrayList<Long> palindromo = new ArrayList<Long>();
-        ArrayList<Integer> limite = new ArrayList<Integer>();
-        
-        //generar lista de palindromos
-        for (int i = 100; i < 1000; i++) {
-            for (int j = 100; j < 1000; j++) {
-                if((i*j) >= 101101 && (i*j)<1000000){
-                    if(e.ispalindromo(i*j)){
-                            palindromo.add(Integer.toUnsignedLong(i*j));
-                            //System.out.println("El palindromo: "+ (i*j) + " "+ i + "x"+ j );
-                    }
-                }
-            }
-        }
-        //eliminar repetidos
-        HashSet hs = new HashSet();
-        hs.addAll(palindromo);
-        palindromo.clear();
-        palindromo.addAll(hs);
-        //Ordenar de forma descendente
-        Collections.sort(palindromo, Collections.reverseOrder());
         Scanner teclado = new Scanner (System.in);
         int t, n;
-        System.out.println("Introduce el numero de test");
-        t = teclado.nextInt();
-        for (int i = 0; i < t; i++) {
-            System.out.println("Introduce el limite del numero");
-            n = teclado.nextInt();
-            limite.add(n);
-        }
-        //imprimir el mayor palindromo que sea inferior a N
-        System.out.println("Resultados: ");
-        for (int i = 0; i < limite.size(); i++) {
-            int aux = 0;
-            for (int j = 0; j < palindromo.size(); j++) {
-                if(aux < 1){
-                    if(limite.get(i) > palindromo.get(j)){
-                        System.out.println(palindromo.get(j));
-                        aux++;
-                    }
-                }               
+        //lectura de datos
+        try {
+            t = teclado.nextInt();
+            if(t < 1 || t>100){
+                System.out.println("1 <= T <=100");
+                t = teclado.nextInt();
+                if(t < 1 || t>100) System.exit(0);
             }
+            for (int i = 0; i < t; i++) {
+                n = teclado.nextInt();
+                if(n < 101101 || n > 1000000){
+                    System.out.println("101101 < N < 1000000");
+                    n = teclado.nextInt();     
+                    if(n < 101101 || n > 1000000) System.exit(0);
+                }
+                e.resultados.add(e.maximoPalindromo(n));
+            }
+            e.imprimirResultados();
+        } catch (Exception ex) {
+            System.out.println("Introducción errónea de datos");
         }
-        
         
     }
     
@@ -89,6 +70,42 @@ public class Ejercicio2 {
         }
     }
     
+    public Long maximoPalindromo(int limite){
+        Long maximo=null;
+        //generar lista de palindromos
+        for (int i = 100; i < 1000; i++) {
+            for (int j = 100; j < 1000; j++) {
+                if((i*j) >= 101101 && (i*j)<1000000){
+                    if(ispalindromo(i*j)){
+                            palindromo.add(Integer.toUnsignedLong(i*j));
+                    }
+                }
+            }
+        }
+        //eliminar repetidos
+        HashSet hs = new HashSet();
+        hs.addAll(palindromo);
+        palindromo.clear();
+        palindromo.addAll(hs);
+        //Ordenar de forma descendente
+        Collections.sort(palindromo, Collections.reverseOrder());   
+        
+        int aux = 0;
+        for (int j = 0; j < palindromo.size(); j++) {
+            if(aux < 1){
+                if(limite > palindromo.get(j)){
+                    maximo = palindromo.get(j);
+                    aux++;
+                }
+            }               
+        }
+        return maximo;
+    }
     
+    public void imprimirResultados(){
+        for (int i = 0; i < resultados.size(); i++) {
+            System.out.println(resultados.get(i));
+        }        
+    }
 }
 
